@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <header class="main__header">
-            <h2>Kanban Board</h2>
+            <h2>Kanban Boards</h2>
         </header>
 
         <div class="main__content"></div>

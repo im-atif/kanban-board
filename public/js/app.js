@@ -46,7 +46,7 @@ var staticRenderFns = [function () {
     staticClass: "main"
   }, [_c("header", {
     staticClass: "main__header"
-  }, [_c("h2", [_vm._v("Kanban Board")])]), _vm._v(" "), _c("div", {
+  }, [_c("h2", [_vm._v("Kanban Boards")])]), _vm._v(" "), _c("div", {
     staticClass: "main__content"
   })]);
 }];
