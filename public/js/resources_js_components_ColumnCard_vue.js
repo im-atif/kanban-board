@@ -11,11 +11,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "ColumnAdd",
+  name: "ColumnCard",
   props: {
     column: {
-      type: String,
+      type: Object,
       required: true
     }
   },
@@ -27,13 +30,33 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    this.title = this.column;
+    this.title = this.column.title;
   },
-  computed: {},
+  watch: {
+    column: {
+      handler: function handler(col, oc) {
+        this.title = col.title;
+      },
+      deep: true
+    }
+  },
   methods: {
     updateColumn: function updateColumn() {
-      this.$emit('edit-column', this.title);
+      var _this = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default().put("columns/".concat(this.column.id), {
+        title: this.title
+      }).then(function (res) {
+        _this.$emit('update', _this.column, res.data.data);
+        _this.editColumn = false;
+      });
+    },
+    cancelColumnUpdate: function cancelColumnUpdate() {
+      this.title = this.column.title;
       this.editColumn = false;
+    },
+    deleteColumn: function deleteColumn() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("columns/".concat(this.column.id));
+      this.$emit('delete', this.column);
     }
   }
 });
@@ -73,20 +96,30 @@ var render = function render() {
       value: _vm.title
     },
     on: {
+      keyup: [function ($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+        return _vm.updateColumn.apply(null, arguments);
+      }, function ($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])) return null;
+        return _vm.cancelColumnUpdate.apply(null, arguments);
+      }],
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.title = $event.target.value;
       }
     }
-  }) : _c("h4", {
+  }) : _vm._e(), _vm._v(" "), !_vm.editColumn ? _c("h4", {
     staticClass: "column-head__title",
     on: {
       click: function click($event) {
         _vm.editColumn = true;
       }
     }
-  }, [_vm._v(_vm._s(this.title))]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-icon ml-5"
+  }, [_vm._v(_vm._s(this.column.title))]) : _vm._e(), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-icon ml-5",
+    on: {
+      click: _vm.deleteColumn
+    }
   }, [_c("font-awesome-icon", {
     attrs: {
       icon: "fa-solid fa-trash-can"

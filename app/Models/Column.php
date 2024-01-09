@@ -10,4 +10,9 @@ class Column extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = ['title'];
+
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
 }

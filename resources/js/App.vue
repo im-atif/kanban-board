@@ -5,12 +5,12 @@
         </header>
 
         <div class="main__content">
-            <ul class="main__content--cards">
+            <ul v-if="!loading" class="main__content--cards">
                 <li v-for="c in columns" class="main__content--cards-item">
-                    <column-card :column="c" />
+                    <column-card :column="c" @delete="onColumnDeleted" @update="onUpdateColumn" />
                 </li>
                 <li>
-                    <column-add @new-column="onColumnAdded" />
+                    <column-add @create="onCreateColumn" />
                 </li>
             </ul>
         </div>
@@ -26,13 +26,33 @@ export default {
     },
     data() {
         return {
+            loading: true,
             columns: [],
         }
     },
-    computed: {},
+    mounted() {
+        this.getData()
+    },
     methods: {
-        onColumnAdded(data) {
+        getData() {
+            axios.get(`list-columns`).then(res => {
+                this.columns = res.data.data;
+                this.loading = false;
+            });
+        },
+        
+        onCreateColumn(data) {
             this.columns.push(data);
+        },
+
+        onUpdateColumn(column, data) {
+            const columnIndex = this.columns.findIndex(c => c.id === column.id);
+            this.columns[columnIndex].title = data.title;
+        },
+
+        onColumnDeleted(data) {
+            const columnIndex = this.columns.findIndex(c => c.id === data.id);
+            this.columns.splice(columnIndex, 1);
         }
     }
 }

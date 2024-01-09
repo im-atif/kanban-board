@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
+require('./bootstrap');
 
 // Font awesome library
 import { library } from '@fortawesome/fontawesome-svg-core';

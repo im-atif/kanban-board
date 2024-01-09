@@ -1,10 +1,12 @@
 <template>
     <div class="column">
         <div class="column-head">
-            <input v-if="editColumn" type="text" v-model="title" placeholder="Enter column title..." />
-            <h4 class="column-head__title" v-else @click="editColumn = true">{{ this.title }}</h4>
+            <input v-if="editColumn" type="text" v-model="title"
+            placeholder="Enter column title..."
+            @keyup.enter="updateColumn" @keyup.esc="cancelColumnUpdate" />
+            <h4 class="column-head__title" v-if="!editColumn" @click="editColumn = true">{{ this.column.title }}</h4>
 
-            <button class="btn btn-icon ml-5">
+            <button class="btn btn-icon ml-5" @click="deleteColumn">
                 <font-awesome-icon icon="fa-solid fa-trash-can" />
             </button>
         </div>
@@ -17,10 +19,12 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-    name: "ColumnAdd",
+    name: "ColumnCard",
     props: {
-        column: {type: String, required: true},
+        column: {type: Object, required: true},
     },
     data() {
         return {
@@ -30,14 +34,35 @@ export default {
         }
     },
     mounted() {
-        this.title = this.column;
+        this.title = this.column.title;
     },
-    computed: {},
+    watch: {
+        column: {
+            handler(col, oc) {
+                this.title = col.title;
+            },
+            deep: true,
+        }
+    },
     methods: {
         updateColumn() {
-            this.$emit('edit-column', this.title);
+            axios.put(`columns/${this.column.id}`, {
+                title: this.title
+            }).then(res => {
+                this.$emit('update', this.column, res.data.data);
+                this.editColumn = false;
+            });
+        },
+
+        cancelColumnUpdate() {
+            this.title = this.column.title;
             this.editColumn = false;
-        }
+        },
+
+        deleteColumn() {
+            axios.delete(`columns/${this.column.id}`);
+            this.$emit('delete', this.column);
+        },
     }
 }
 </script>

@@ -26,9 +26,13 @@ export default {
     computed: {},
     methods: {
         saveColumn() {
-            this.$emit('new-column', this.title);
-            this.title = '';
-            this.addColumn = false;
+            axios.post(`columns`, {
+                title: this.title
+            }).then(res => {
+                this.$emit('create', res.data.data);
+                this.title = '';
+                this.addColumn = false;
+            });
         }
     }
 }

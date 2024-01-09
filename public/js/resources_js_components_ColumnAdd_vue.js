@@ -22,9 +22,14 @@ __webpack_require__.r(__webpack_exports__);
   computed: {},
   methods: {
     saveColumn: function saveColumn() {
-      this.$emit('new-column', this.title);
-      this.title = '';
-      this.addColumn = false;
+      var _this = this;
+      axios.post("columns", {
+        title: this.title
+      }).then(function (res) {
+        _this.$emit('create', res.data.data);
+        _this.title = '';
+        _this.addColumn = false;
+      });
     }
   }
 });

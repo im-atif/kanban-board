@@ -123,6 +123,8 @@ ol, ul {
   flex-direction: row;
   overflow-x: auto;
   overflow-y: hidden;
+  height: calc(100vh - 80px);
+  padding-bottom: 20px;
 }
 
 .column {
