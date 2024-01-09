@@ -11,10 +11,13 @@
             </button>
         </div>
         
-        <button v-if="!addCard" class="btn btn-add" @click="addCard = true">
-            <font-awesome-icon icon="fa-solid fa-circle-plus" />
-            <span>Add a card</span>
-        </button>
+        <card-item v-for="c in cards"
+        :card="c" :columnId="column.id"
+        @delete-card="onDeleteCard"
+        @update-card="onCardUpdate" />
+        
+        <add-card :columnId="column.id"
+        @card-create="onCardCreate" />
     </div>
 </template>
 
@@ -26,20 +29,27 @@ export default {
     props: {
         column: {type: Object, required: true},
     },
+    components: {
+        AddCard: () => import('./AddCard.vue'),
+        CardItem: () => import('./CardItem.vue'),
+    },
     data() {
         return {
             title: '',
             editColumn: false,
             addCard: false,
+            cards: [],
         }
     },
     mounted() {
         this.title = this.column.title;
+        this.cards = this.column.cards;
     },
     watch: {
         column: {
             handler(col, oc) {
                 this.title = col.title;
+                this.cards = col.cards;
             },
             deep: true,
         }
@@ -63,6 +73,21 @@ export default {
             axios.delete(`columns/${this.column.id}`);
             this.$emit('delete', this.column);
         },
+
+        onCardCreate(data) {
+            this.cards.push(data);
+        },
+
+        onDeleteCard(data) {
+            const cIndex = this.cards.findIndex(c => c.id === data.id);
+            this.cards.splice(cIndex, 1);
+        },
+
+        onCardUpdate(data) {
+            const cIndex = this.cards.findIndex(c => c.id === data.id);
+            this.cards[cIndex].title = data.title;
+            this.cards[cIndex].description = data.description;
+        }
     }
 }
 </script>

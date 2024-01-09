@@ -57,6 +57,26 @@ ol, ul {
   padding: 0;
 }
 
+input,
+textarea {
+  display: block;
+  width: 100%;
+  line-height: 28px;
+  padding: 8px;
+  border-radius: 2px;
+  border: 1px solid #061432;
+}
+input:focus,
+textarea:focus {
+  box-shadow: none;
+  outline: none;
+  border-width: 2px;
+}
+
+input {
+  height: 38px;
+}
+
 .btn {
   display: inline-block;
   border: 0;
@@ -94,8 +114,28 @@ ol, ul {
   background-color: #0d2456;
 }
 
+.ml-auto {
+  margin-left: auto !important;
+}
+
+.mr-auto {
+  margin-right: auto !important;
+}
+
 .mb-0 {
   margin-bottom: 0 !important;
+}
+
+.ml-0 {
+  margin-left: 0 !important;
+}
+
+.mr-0 {
+  margin-right: 0 !important;
+}
+
+.mt-0 {
+  margin-top: 0 !important;
 }
 
 .ml-5 {
@@ -104,6 +144,14 @@ ol, ul {
 
 .mr-5 {
   margin-right: 5px !important;
+}
+
+.mb-5 {
+  margin-bottom: 5px !important;
+}
+
+.mt-5 {
+  margin-top: 5px !important;
 }
 
 .main__header {
@@ -141,22 +189,31 @@ ol, ul {
   justify-content: space-between;
   margin-bottom: 8px;
 }
-.column-head input {
-  display: block;
-  width: 100%;
-  height: 38px;
-  line-height: 38px;
-  padding: 0 8px;
-  border-radius: 2px;
-  border: 1px solid #061432;
-}
-.column-head input:focus {
-  box-shadow: none;
-  outline: none;
-  border-width: 2px;
-}
 .column-head__title {
   font-size: 18px;
   line-height: 38px;
   cursor: pointer;
+}
+
+.card {
+  background-color: #e4e4e4;
+  padding: 8px 8px;
+  margin: 0 0 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.card h5 {
+  font-size: 14px;
+  font-weight: 400;
+}
+.card__modal {
+  cursor: default;
+}
+.card__modal .vm--modal {
+  padding: 20px;
+}
+.card__modal .vm--modal .card__modal--title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }

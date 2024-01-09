@@ -18,7 +18,7 @@ class CreateCardsTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             
-            $table->index('after')->nullable();
+            $table->unsignedBigInteger('after')->nullable()->index();
             $table->foreignId('column_id')->constrained();
             $table->softDeletes();
             $table->timestamps();

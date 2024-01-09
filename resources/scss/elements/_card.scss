@@ -1,0 +1,26 @@
+.card {
+    background-color: $light_gray;
+    padding: 8px 8px;
+    margin: 0 0 8px 0;
+    border-radius: 5px;
+    cursor: pointer;
+
+    h5 {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    &__modal {
+        cursor: default;
+        $p: &;
+        .vm--modal {
+            padding: 20px;
+
+            #{$p}--title {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+        }
+    }
+}

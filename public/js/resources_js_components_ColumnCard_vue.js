@@ -22,20 +22,31 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     }
   },
+  components: {
+    AddCard: function AddCard() {
+      return __webpack_require__.e(/*! import() */ "resources_js_components_AddCard_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./AddCard.vue */ "./resources/js/components/AddCard.vue"));
+    },
+    CardItem: function CardItem() {
+      return __webpack_require__.e(/*! import() */ "resources_js_components_CardItem_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./CardItem.vue */ "./resources/js/components/CardItem.vue"));
+    }
+  },
   data: function data() {
     return {
       title: '',
       editColumn: false,
-      addCard: false
+      addCard: false,
+      cards: []
     };
   },
   mounted: function mounted() {
     this.title = this.column.title;
+    this.cards = this.column.cards;
   },
   watch: {
     column: {
       handler: function handler(col, oc) {
         this.title = col.title;
+        this.cards = col.cards;
       },
       deep: true
     }
@@ -57,6 +68,22 @@ __webpack_require__.r(__webpack_exports__);
     deleteColumn: function deleteColumn() {
       axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("columns/".concat(this.column.id));
       this.$emit('delete', this.column);
+    },
+    onCardCreate: function onCardCreate(data) {
+      this.cards.push(data);
+    },
+    onDeleteCard: function onDeleteCard(data) {
+      var cIndex = this.cards.findIndex(function (c) {
+        return c.id === data.id;
+      });
+      this.cards.splice(cIndex, 1);
+    },
+    onCardUpdate: function onCardUpdate(data) {
+      var cIndex = this.cards.findIndex(function (c) {
+        return c.id === data.id;
+      });
+      this.cards[cIndex].title = data.title;
+      this.cards[cIndex].description = data.description;
     }
   }
 });
@@ -124,18 +151,25 @@ var render = function render() {
     attrs: {
       icon: "fa-solid fa-trash-can"
     }
-  })], 1)]), _vm._v(" "), !_vm.addCard ? _c("button", {
-    staticClass: "btn btn-add",
-    on: {
-      click: function click($event) {
-        _vm.addCard = true;
+  })], 1)]), _vm._v(" "), _vm._l(_vm.cards, function (c) {
+    return _c("card-item", {
+      attrs: {
+        card: c,
+        columnId: _vm.column.id
+      },
+      on: {
+        "delete-card": _vm.onDeleteCard,
+        "update-card": _vm.onCardUpdate
       }
-    }
-  }, [_c("font-awesome-icon", {
+    });
+  }), _vm._v(" "), _c("add-card", {
     attrs: {
-      icon: "fa-solid fa-circle-plus"
+      columnId: _vm.column.id
+    },
+    on: {
+      "card-create": _vm.onCardCreate
     }
-  }), _vm._v(" "), _c("span", [_vm._v("Add a card")])], 1) : _vm._e()]);
+  })], 2);
 };
 var staticRenderFns = [];
 render._withStripped = true;

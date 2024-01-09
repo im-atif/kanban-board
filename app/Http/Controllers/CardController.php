@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
-    public function allCards(Request $request)
+    public function index(Request $request)
     {
         $cards = Card::all();
         return CardResource::collection($cards);
@@ -23,7 +23,7 @@ class CardController extends Controller
         ]);
 
         $column = Column::find($request->column_id);
-        $lastCard = $column->cards->latest()->first();
+        $lastCard = $column->cards()->latest()->first();
 
         $data = $request->only('title', 'column_id');
         $data['after'] = $lastCard ? $lastCard->id : null;

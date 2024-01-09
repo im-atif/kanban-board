@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ColumnController;
+use App\Http\Middleware\TokenValidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('list-columns', [ColumnController::class, 'index']);
-Route::apiResource('columns', ColumnController::class)->except(['index', 'show']);
+Route::middleware(TokenValidate::class)->group(function() {
+    Route::get('list-columns', [ColumnController::class, 'index']);
+    Route::apiResource('columns', ColumnController::class)->except(['index', 'show']);
+    
+    Route::get('list-cards', [CardController::class, 'index']);
+    Route::apiResource('cards', CardController::class)->except(['index', 'show']);
+});
 
-Route::get('list-cards', [CardController::class, 'index']);
-Route::apiResource('cards', CardController::class)->except(['index', 'show']);
