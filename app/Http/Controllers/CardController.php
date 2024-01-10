@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CardResource;
 use App\Models\Card;
 use App\Models\Column;
@@ -23,10 +24,9 @@ class CardController extends Controller
         ]);
 
         $column = Column::find($request->column_id);
-        $lastCard = $column->cards()->latest()->first();
 
         $data = $request->only('title', 'column_id');
-        $data['after'] = $lastCard ? $lastCard->id : null;
+        $data['order'] = $column->cards->count() + 1;
 
         $card = Card::create($data);
         return new CardResource($card);
@@ -43,6 +43,31 @@ class CardController extends Controller
         $card->description = $request->description;
         $card->save();
         return new CardResource($card);
+    }
+
+    public function updateOrder(Request $request, Card $card)
+    {
+        $request->validate([
+            'column_id' => 'required|exists:columns,id',
+            'index' => 'required|numeric'
+        ]);
+        // return $request->all();
+
+        DB::beginTransaction();
+        $order = $request->index + 1;
+        $nextCards = Card::where('column_id', $request->column_id)->where('order', '>=', $order)->get();
+        foreach ($nextCards as $nc) {
+            $order += 1;
+            $nc->order = $order;
+            $nc->save();
+        }
+
+        $card->column_id = $request->column_id;
+        $card->order = $request->index + 1;
+        $card->save();
+        DB::commit();
+
+        return response()->json(true, 200);
     }
 
     public function destroy(Card $card)

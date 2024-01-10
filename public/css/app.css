@@ -55,6 +55,8 @@ h6 {
 ol, ul {
   margin: 0;
   padding: 0;
+  list-style: none;
+  list-style-type: none;
 }
 
 input,
@@ -166,7 +168,7 @@ input {
 .main__content {
   padding: 10px 10px;
 }
-.main__content--cards {
+.main__content--columns {
   display: flex;
   flex-direction: row;
   overflow-x: auto;
@@ -194,6 +196,11 @@ input {
   line-height: 38px;
   cursor: pointer;
 }
+.column__draggable {
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  margin-bottom: 8px;
+}
 
 .card {
   background-color: #e4e4e4;
@@ -216,4 +223,7 @@ input {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
+}
+.card:last-child {
+  margin-bottom: 0;
 }

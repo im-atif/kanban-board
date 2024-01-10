@@ -18,4 +18,10 @@
             cursor: pointer;
         }
     }
+
+    &__draggable {
+        border: 1px dashed rgba($color: $dark_color, $alpha: 0.15);
+        padding: 8px;
+        margin-bottom: 8px;
+    }
 }

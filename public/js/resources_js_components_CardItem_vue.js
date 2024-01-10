@@ -27,48 +27,45 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.cardTitle = this.card.title;
-    this.cardDesc = this.card.description;
+    this.title = this.card.title;
+    this.description = this.card.description;
   },
   data: function data() {
     return {
-      cardTitle: null,
-      cardDesc: null,
+      title: null,
+      description: null,
       editCard: false
     };
   },
   watch: {
     card: {
-      handler: function handler(col, oc) {
-        this.cardTitle = col.title;
-        this.cardDesc = col.description;
+      handler: function handler(card, oc) {
+        this.title = card.title;
+        this.description = card.description;
       },
       deep: true
     }
   },
   methods: {
-    showModal: function showModal() {
-      this.$modal.show(this.card.id.toString());
-    },
-    cancelEdit: function cancelEdit() {
-      this.cardTitle = this.card.title;
-      this.cardDesc = this.card.description;
+    close: function close() {
+      this.title = this.card.title;
+      this.description = this.card.description;
       this.editCard = false;
     },
     deleteCard: function deleteCard() {
       axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("cards/".concat(this.card.id));
-      this.$emit('delete-card', this.card);
       this.$modal.hide(this.card.id.toString());
+      this.$emit('delete', this.card, this.columnId);
     },
-    updateCard: function updateCard() {
+    update: function update() {
       var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default().put("cards/".concat(this.card.id), {
-        title: this.cardTitle,
-        description: this.cardDesc
+        title: this.title,
+        description: this.description
       }).then(function (res) {
         _this.editCard = false;
-        _this.$emit('update-card', res.data.data);
         _this.$modal.hide(_this.card.id.toString());
+        _this.$emit('update', res.data.data, _this.columnId);
       });
     }
   }
@@ -94,7 +91,9 @@ var render = function render() {
   return _c("div", {
     staticClass: "card",
     on: {
-      click: _vm.showModal
+      click: function click($event) {
+        _vm.$modal.show(_vm.card.id.toString());
+      }
     }
   }, [_c("h5", [_vm._v(_vm._s(_vm.card.title))]), _vm._v(" "), _c("modal", {
     staticClass: "card__modal",
@@ -107,20 +106,27 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.cardTitle,
-      expression: "cardTitle"
+      value: _vm.title,
+      expression: "title"
     }],
     staticClass: "mr-5",
     attrs: {
       type: "text"
     },
     domProps: {
-      value: _vm.cardTitle
+      value: _vm.title
     },
     on: {
+      keyup: [function ($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+        return _vm.update.apply(null, arguments);
+      }, function ($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])) return null;
+        return _vm.close.apply(null, arguments);
+      }],
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.cardTitle = $event.target.value;
+        _vm.title = $event.target.value;
       }
     }
   }) : _vm._e(), _vm._v(" "), !_vm.editCard ? _c("button", {
@@ -143,38 +149,49 @@ var render = function render() {
     attrs: {
       icon: "fa-solid fa-trash-can"
     }
-  })], 1) : _vm._e(), _vm._v(" "), _vm.editCard ? _c("button", {
-    staticClass: "btn btn-sm mr-0",
-    on: {
-      click: _vm.updateCard
-    }
-  }, [_vm._v("Update")]) : _vm._e(), _vm._v(" "), _vm.editCard ? _c("button", {
+  })], 1) : _vm._e(), _vm._v(" "), !_vm.editCard ? _c("button", {
     staticClass: "btn btn-icon ml-5",
     on: {
-      click: _vm.cancelEdit
+      click: function click($event) {
+        _vm.$modal.hide(_vm.card.id.toString());
+      }
     }
   }, [_c("font-awesome-icon", {
     attrs: {
       icon: "fa-solid fa-xmark"
     }
-  })], 1) : _vm._e()]), _vm._v(" "), !_vm.editCard ? _c("p", [_vm._v(_vm._s((_vm$card$description = _vm.card.description) !== null && _vm$card$description !== void 0 ? _vm$card$description : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.editCard ? _c("textarea", {
+  })], 1) : _vm._e(), _vm._v(" "), _vm.editCard ? _c("button", {
+    staticClass: "btn btn-sm mr-0",
+    on: {
+      click: _vm.update
+    }
+  }, [_vm._v("Update")]) : _vm._e(), _vm._v(" "), _vm.editCard ? _c("button", {
+    staticClass: "btn btn-icon ml-5",
+    on: {
+      click: _vm.close
+    }
+  }, [_c("font-awesome-icon", {
+    attrs: {
+      icon: "fa-solid fa-xmark"
+    }
+  })], 1) : _vm._e()]), _vm._v(" "), !_vm.editCard ? _c("p", [_vm._v(_vm._s((_vm$card$description = _vm.card.description) !== null && _vm$card$description !== void 0 ? _vm$card$description : "Not available!"))]) : _vm._e(), _vm._v(" "), _vm.editCard ? _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.cardDesc,
-      expression: "cardDesc"
+      value: _vm.description,
+      expression: "description"
     }],
     attrs: {
       placeholder: "Type your description here...",
       rows: "6"
     },
     domProps: {
-      value: _vm.cardDesc
+      value: _vm.description
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.cardDesc = $event.target.value;
+        _vm.description = $event.target.value;
       }
     }
   }) : _vm._e()])], 1);

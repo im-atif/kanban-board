@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Card extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['title', 'description', 'after', 'column_id'];
+    protected $fillable = ['title', 'description', 'order', 'column_id'];
 
     public function column()
     {

@@ -29,6 +29,7 @@
         "@fortawesome/fontawesome-svg-core": "^6.5.1",
         "@fortawesome/free-solid-svg-icons": "^6.5.1",
         "@fortawesome/vue-fontawesome": "^2.0.10",
-        "vue-js-modal": "^2.0.1"
+        "vue-js-modal": "^2.0.1",
+        "vuedraggable": "^2.24.3"
     }
 }

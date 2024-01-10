@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ColumnResource;
 use App\Models\Column;
 use Illuminate\Http\Request;
@@ -34,6 +35,28 @@ class ColumnController extends Controller
         $column->save();
 
         return new ColumnResource($column);
+    }
+
+    public function reordered(Request $request, Column $column)
+    {
+        $request->validate([
+            'index' => 'required|numeric'
+        ]);
+
+        // return $request->all();
+
+        DB::beginTransaction();
+        $order = $request->index + 1;
+        $nextCards = $column->cards()->where('order', '>', $order)->get();
+
+        foreach ($nextCards as $nc) {
+            $nc->order = $order;
+            $nc->save();
+            $order += 1;
+        }
+
+        DB::commit();
+        return response()->json(true, 200);
     }
 
     public function destroy(Column $column)

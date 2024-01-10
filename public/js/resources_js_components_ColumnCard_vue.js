@@ -13,6 +13,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "ColumnCard",
@@ -23,11 +29,17 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   components: {
+    ColumnEdit: function ColumnEdit() {
+      return __webpack_require__.e(/*! import() */ "resources_js_components_ColumnEdit_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./ColumnEdit.vue */ "./resources/js/components/ColumnEdit.vue"));
+    },
     AddCard: function AddCard() {
       return __webpack_require__.e(/*! import() */ "resources_js_components_AddCard_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./AddCard.vue */ "./resources/js/components/AddCard.vue"));
     },
     CardItem: function CardItem() {
       return __webpack_require__.e(/*! import() */ "resources_js_components_CardItem_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./CardItem.vue */ "./resources/js/components/CardItem.vue"));
+    },
+    Draggable: function Draggable() {
+      return __webpack_require__.e(/*! import() */ "node_modules_vuedraggable_dist_vuedraggable_umd_js").then(__webpack_require__.t.bind(__webpack_require__, /*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js", 23));
     }
   },
   data: function data() {
@@ -35,22 +47,22 @@ __webpack_require__.r(__webpack_exports__);
       title: '',
       editColumn: false,
       addCard: false,
-      cards: []
+      columnCards: []
     };
   },
   mounted: function mounted() {
     this.title = this.column.title;
-    this.cards = this.column.cards;
+    this.columnCards = _toConsumableArray(this.column.cards);
+    // this.columnCards = [...this.cards]
   },
-  watch: {
-    column: {
-      handler: function handler(col, oc) {
-        this.title = col.title;
-        this.cards = col.cards;
-      },
-      deep: true
-    }
-  },
+  // watch: {
+  //     column: {
+  //         handler(col, oc) {
+  //             this.title = col.title;
+  //         },
+  //         deep: true,
+  //     }
+  // },
   methods: {
     updateColumn: function updateColumn() {
       var _this = this;
@@ -84,6 +96,9 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.cards[cIndex].title = data.title;
       this.cards[cIndex].description = data.description;
+    },
+    handleLog: function handleLog(e) {
+      console.log(e);
     }
   }
 });
@@ -104,55 +119,26 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "column"
-  }, [_c("div", {
-    staticClass: "column-head"
-  }, [_vm.editColumn ? _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.title,
-      expression: "title"
-    }],
+  return _c("draggable", {
+    staticClass: "column",
     attrs: {
-      type: "text",
-      placeholder: "Enter column title..."
-    },
-    domProps: {
-      value: _vm.title
+      tag: "div",
+      list: _vm.columnCards,
+      group: {
+        name: "card"
+      },
+      draggable: ".item"
     },
     on: {
-      keyup: [function ($event) {
-        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
-        return _vm.updateColumn.apply(null, arguments);
-      }, function ($event) {
-        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])) return null;
-        return _vm.cancelColumnUpdate.apply(null, arguments);
-      }],
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.title = $event.target.value;
-      }
+      change: _vm.handleLog
     }
-  }) : _vm._e(), _vm._v(" "), !_vm.editColumn ? _c("h4", {
-    staticClass: "column-head__title",
-    on: {
-      click: function click($event) {
-        _vm.editColumn = true;
-      }
-    }
-  }, [_vm._v(_vm._s(this.column.title))]) : _vm._e(), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-icon ml-5",
-    on: {
-      click: _vm.deleteColumn
-    }
-  }, [_c("font-awesome-icon", {
+  }, [_c("column-edit", {
     attrs: {
-      icon: "fa-solid fa-trash-can"
+      column: _vm.column
     }
-  })], 1)]), _vm._v(" "), _vm._l(_vm.cards, function (c) {
+  }), _vm._v(" "), _vm._l(_vm.columnCards, function (c, index) {
     return _c("card-item", {
+      key: index,
       attrs: {
         card: c,
         columnId: _vm.column.id

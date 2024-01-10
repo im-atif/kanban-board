@@ -54,6 +54,8 @@ h6 {
 ol, ul {
     margin: 0;
     padding: 0;
+    list-style: none;
+    list-style-type: none;
 }
 
 input,
@@ -146,7 +148,7 @@ input {
     &__content {
         padding: 10px 10px;
         
-        &--cards {
+        &--columns {
             display: flex;
             flex-direction: row;
             overflow-x: auto;

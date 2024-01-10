@@ -21,15 +21,21 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {},
   methods: {
-    saveColumn: function saveColumn() {
+    save: function save() {
       var _this = this;
-      axios.post("columns", {
-        title: this.title
-      }).then(function (res) {
-        _this.$emit('create', res.data.data);
-        _this.title = '';
-        _this.addColumn = false;
-      });
+      if (this.title) {
+        axios.post("columns", {
+          title: this.title
+        }).then(function (res) {
+          _this.$emit('create', res.data.data);
+          _this.title = '';
+          _this.addColumn = false;
+        });
+      }
+    },
+    close: function close() {
+      this.title = '';
+      this.addColumn = false;
     }
   }
 });
@@ -69,6 +75,13 @@ var render = function render() {
       value: _vm.title
     },
     on: {
+      keyup: [function ($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+        return _vm.save.apply(null, arguments);
+      }, function ($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])) return null;
+        return _vm.close.apply(null, arguments);
+      }],
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.title = $event.target.value;
@@ -77,14 +90,12 @@ var render = function render() {
   })]) : _vm._e(), _vm._v(" "), _vm.addColumn ? _c("button", {
     staticClass: "btn btn-primary btn-sm mr-5",
     on: {
-      click: _vm.saveColumn
+      click: _vm.save
     }
   }, [_vm._v("Save")]) : _vm._e(), _vm._v(" "), _vm.addColumn ? _c("button", {
     staticClass: "btn btn-icon",
     on: {
-      click: function click($event) {
-        _vm.addColumn = false;
-      }
+      click: _vm.close
     }
   }, [_c("font-awesome-icon", {
     attrs: {

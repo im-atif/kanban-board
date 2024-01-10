@@ -20,8 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(TokenValidate::class)->group(function() {
     Route::get('list-columns', [ColumnController::class, 'index']);
     Route::apiResource('columns', ColumnController::class)->except(['index', 'show']);
+    Route::put('columns/{column}/reordered', [ColumnController::class, 'reordered']);
     
     Route::get('list-cards', [CardController::class, 'index']);
     Route::apiResource('cards', CardController::class)->except(['index', 'show']);
+    Route::put('cards/{card}/order', [CardController::class, 'updateOrder']);
 });
 
