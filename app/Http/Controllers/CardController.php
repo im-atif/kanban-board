@@ -6,13 +6,25 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CardResource;
 use App\Models\Card;
 use App\Models\Column;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
     public function index(Request $request)
     {
-        $cards = Card::all();
+        $trashed = $request->has('status') && $request->status == 0;
+        $dated = $request->has('date') && Carbon::parse($request->date);
+        $cards = $trashed ? Card::onlyTrashed() : Card::withoutTrashed();
+
+        if ($dated) {
+            $date = Carbon::parse($request->date)->format('Y-m-d');
+            $start = $date . ' 00:00:00';
+            $end = $date . ' 23:59:59';
+            $cards = $cards->whereBetween('created_at', [$start, $end]);
+        }
+
+        $cards = $cards->get();
         return CardResource::collection($cards);
     }
 

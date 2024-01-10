@@ -18,7 +18,8 @@ class CardResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'order' => $this->order,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'deleted_at' => $this->deleted_at ? $this->deleted_at->format('Y-m-d H:i:s') : null,
         ];
     }
 }

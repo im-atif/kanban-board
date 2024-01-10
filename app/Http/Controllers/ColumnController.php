@@ -43,8 +43,6 @@ class ColumnController extends Controller
             'index' => 'required|numeric'
         ]);
 
-        // return $request->all();
-
         DB::beginTransaction();
         $order = $request->index + 1;
         $nextCards = $column->cards()->where('order', '>', $order)->get();
@@ -61,9 +59,9 @@ class ColumnController extends Controller
 
     public function destroy(Column $column)
     {
-        $cardIds = [];
-        foreach($column->cards as $card) $cardIds[] = $card->id;
-        // bulk delete cards
+        DB::beginTransaction();
+        foreach($column->cards as $card) $card->delete();
+        DB::commit();
         $column->delete();
         return response()->json(true, 200);
     }
